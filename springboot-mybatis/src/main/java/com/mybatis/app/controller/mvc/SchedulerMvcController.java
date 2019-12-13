@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mybatis.app.instance.service.impl.SchedulerServiceImpl;
 import com.mybatis.app.model.SchedulerJob;
@@ -18,15 +20,23 @@ public class SchedulerMvcController {
 	@Autowired
 	private SchedulerServiceImpl service;
 
-	@GetMapping("/create")
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String create(Model model) {
+		SchedulerJob schedulerJob = new SchedulerJob();
+		model.addAttribute("schedulerJob", schedulerJob);
 		return "scheduler/create_scheduler";
 	}
 
-	@GetMapping("/list")
+	@RequestMapping(value = "/createprocess", method = RequestMethod.POST)
+	public String createProcess(@ModelAttribute SchedulerJob schedulerJob) {
+		System.out.println("masuk sini");
+		System.out.println(schedulerJob.getJobName());
+		return "redirect:/scheduler/list";
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String listJob(Model model) {
 		List<SchedulerJob> listJob = service.schedulerJobMvcList();
-		System.out.println("scheduluerJob size: " + listJob.size());
 		model.addAttribute("listJobs", listJob);
 		return "scheduler/list_scheduler";
 	}
