@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.mybatis.app.instance.service.impl.SchedulerServiceImpl;
+import com.mybatis.app.instance.service.impl.SchedulerServiceMvcImpl;
 import com.mybatis.app.model.SchedulerJob;
 
 @Controller
@@ -18,7 +17,7 @@ import com.mybatis.app.model.SchedulerJob;
 public class SchedulerMvcController {
 
 	@Autowired
-	private SchedulerServiceImpl service;
+	private SchedulerServiceMvcImpl service;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String create(Model model) {

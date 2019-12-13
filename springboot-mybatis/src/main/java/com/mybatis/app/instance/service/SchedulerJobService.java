@@ -15,7 +15,5 @@ public interface SchedulerJobService {
     boolean pauseJob(SchedulerJobInfo jobInfo);
     boolean resumeJob(SchedulerJobInfo jobInfo);
     boolean startJobNow(SchedulerJobInfo jobInfo);
-    List<SchedulerJob> schedulerJobMvcList();
-    String getJobState(String jobName, String groupKey);
 
 }
