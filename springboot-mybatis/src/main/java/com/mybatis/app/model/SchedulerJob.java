@@ -10,6 +10,11 @@ public class SchedulerJob {
 	private Date lastFiredTime;
 	private Date nextFireTime;
 	private String jobState;
+	private String jobClass;
+	private String cronExpression;
+	private Long repeatTime;
+	private boolean cronJob;
+	
 	public String getJobName() {
 		return jobName;
 	}
@@ -46,6 +51,28 @@ public class SchedulerJob {
 	public void setJobState(String jobState) {
 		this.jobState = jobState;
 	}
-
-	
+	public String getJobClass() {
+		return jobClass;
+	}
+	public void setJobClass(String jobClass) {
+		this.jobClass = jobClass;
+	}
+	public String getCronExpression() {
+		return cronExpression;
+	}
+	public void setCronExpression(String cronExpression) {
+		this.cronExpression = cronExpression;
+	}
+	public Long getRepeatTime() {
+		return repeatTime;
+	}
+	public void setRepeatTime(Long repeatTime) {
+		this.repeatTime = repeatTime;
+	}
+	public boolean isCronJob() {
+		return cronJob;
+	}
+	public void setCronJob(boolean cronJob) {
+		this.cronJob = cronJob;
+	}
 }

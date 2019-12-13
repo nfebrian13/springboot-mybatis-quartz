@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
@@ -27,15 +30,49 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 	private SchedulerFactoryBean schedulerFactoryBean;
 
 	@Autowired
-	private ApplicationContext context;
-
-	@Autowired
 	private JobScheduleCreator scheduleCreator;
 
 	@Override
-	public List<SchedulerJob> schedulerJobMvcList() {
-		List<SchedulerJob> list = new ArrayList<>();
+	public boolean createJob(SchedulerJob schedulerJob) {
+
 		try {
+
+			Trigger trigger;
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+
+			JobDetail jobDetail = JobBuilder
+					.newJob((Class<? extends QuartzJobBean>) Class.forName(schedulerJob.getJobClass()))
+					.withIdentity(schedulerJob.getJobName(), schedulerJob.getGroupName()).build();
+
+			if (schedulerJob.isCronJob()) {
+
+				trigger = scheduleCreator.createCronTrigger(schedulerJob.getJobName(), new Date(),
+						schedulerJob.getCronExpression(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+			} else {
+
+				trigger = scheduleCreator.createSimpleTrigger(schedulerJob.getJobName(), new Date(),
+						schedulerJob.getRepeatTime(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+			}
+
+			scheduler.scheduleJob(jobDetail, trigger);
+			return true;
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	@Override
+	public List<SchedulerJob> schedulerJobMvcList() {
+	
+		List<SchedulerJob> list = new ArrayList<>();
+
+		try {
+			
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
 			for (String groupName : scheduler.getJobGroupNames()) {
@@ -61,18 +98,20 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 					list.add(jobObj);
 				}
 			}
+			
 		} catch (SchedulerException e) {
 			System.out.println("SchedulerException while fetching all jobs. error message :" + e.getMessage());
 			e.printStackTrace();
 		}
+
 		return list;
 	}
 
 	@Override
 	public String getJobState(String jobName, String groupKey) {
-		System.out.println("jobName " + jobName + " groupKey " + groupKey);
 
 		try {
+			
 			JobKey jobKey = new JobKey(jobName, groupKey);
 
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -98,10 +137,12 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 					}
 				}
 			}
+			
 		} catch (SchedulerException e) {
 			System.out.println("SchedulerException while checking job with name and group exist:" + e.getMessage());
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
 }

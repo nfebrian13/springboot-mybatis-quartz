@@ -8,5 +8,6 @@ public interface SchedulerMvcService {
 
     List<SchedulerJob> schedulerJobMvcList();
     String getJobState(String jobName, String groupKey);
+    boolean createJob(SchedulerJob schedulerJob);
 
 }

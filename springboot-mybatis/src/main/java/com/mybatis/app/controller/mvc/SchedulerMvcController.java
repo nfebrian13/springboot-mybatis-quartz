@@ -28,8 +28,24 @@ public class SchedulerMvcController {
 
 	@RequestMapping(value = "/createprocess", method = RequestMethod.POST)
 	public String createProcess(@ModelAttribute SchedulerJob schedulerJob) {
-		System.out.println("masuk sini");
 		System.out.println(schedulerJob.getJobName());
+		System.out.println(schedulerJob.getJobClass());
+		System.out.println(schedulerJob.getGroupName());
+		System.out.println(schedulerJob.getCronExpression());
+		System.out.println(schedulerJob.getRepeatTime());
+		System.out.println(schedulerJob.isCronJob());
+		
+		SchedulerJob obj = new SchedulerJob();
+		obj.setJobName(schedulerJob.getJobName());
+		obj.setJobClass(schedulerJob.getJobClass());
+		obj.setGroupName(schedulerJob.getGroupName());
+		obj.setCronExpression(schedulerJob.getCronExpression());
+		obj.setRepeatTime(schedulerJob.getRepeatTime());
+		obj.setCronJob(schedulerJob.isCronJob());
+
+		boolean createJob = service.createJob(obj);
+		System.out.println("createJob " + createJob);
+		
 		return "redirect:/scheduler/list";
 	}
 
