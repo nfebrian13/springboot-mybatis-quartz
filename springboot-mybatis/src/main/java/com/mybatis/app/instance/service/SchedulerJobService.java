@@ -1,5 +1,8 @@
 package com.mybatis.app.instance.service;
 
+import java.util.List;
+
+import com.mybatis.app.model.SchedulerJob;
 import com.mybatis.app.model.SchedulerJobInfo;
 
 public interface SchedulerJobService {
@@ -12,5 +15,7 @@ public interface SchedulerJobService {
     boolean pauseJob(SchedulerJobInfo jobInfo);
     boolean resumeJob(SchedulerJobInfo jobInfo);
     boolean startJobNow(SchedulerJobInfo jobInfo);
+    List<SchedulerJob> schedulerJobMvcList();
+    String getJobState(String jobName, String groupKey);
 
 }

@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<title>Student List</title>
+
+<link rel="stylesheet"
+	th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/default.css}" />
+
+</head>
+
+<body>
+
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+		<a class="navbar-brand" href="#"></a>
+	</nav>
+
+	<main class="container">
+	<table class="table table-striped">
+		<tr>
+			<th>Job Name</th>
+			<th>Group Name</th>
+			<th>Schedule Time</th>
+			<th>Last Fired Time</th>
+			<th>Next Fire Time</th>
+			<th>Job State</th>
+		</tr>
+		<tr th:each="job : ${listJobs}">
+			<td th:text="${job.jobName}"></td>
+			<td th:text="${job.groupName}"></td>
+			<td th:text="${job.scheduleTime}"></td>
+			<td th:text="${job.lastFiredTime}"></td>
+			<td th:text="${job.nextFireTime}"></td>
+			<td th:text="${job.jobState}"></td>
+		</tr>
+	</table>
+	</main>
+
+	<script type="text/javascript"
+		th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
