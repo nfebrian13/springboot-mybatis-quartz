@@ -1,0 +1,19 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.app.mapper.StudentMapper">
+
+	<resultMap type="com.mybatis.app.model.Student" id="studentResultMap">
+		<id column="ID" property="id" />
+		<result column="NAME" property="name" />
+		<result column="BRANCH" property="branch" />
+		<result column="PERCENTAGE" property="percentage" />
+		<result column="PHONE" property="phone" />
+		<result column="EMAIL" property="email" />
+	</resultMap>
+
+	<select id="findAll" resultMap="studentResultMap">
+		select * from student
+	</select>
+
+</mapper>

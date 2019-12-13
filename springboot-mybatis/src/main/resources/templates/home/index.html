@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<title>Student List</title>
+
+<link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/default.css}" />
+
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+		<a class="navbar-brand" href="#">Student List</a>
+	</nav>
+
+	<main class="container">
+		<table class="table table-striped">
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Branch</th>
+				<th>Percentage</th>
+				<th>Phone</th>
+				<th>Email</th>
+			</tr>
+			<tr th:each="student : ${studentlist}">
+				<td th:text="${student.id}"></td>
+				<td th:text="${student.name}"></td>
+				<td th:text="${student.branch}"></td>
+				<td th:text="${student.percentage}"></td>
+				<td th:text="${student.phone}"></td>
+				<td th:text="${student.email}"></td>
+			</tr>
+		</table>
+	</main>
+
+	<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+	
+</body>
+</html>
