@@ -16,4 +16,7 @@ public interface SchedulerMvcService {
 	boolean updateCronJob(String jobName, Date date, String cronExpression);
 	boolean isJobRunning(String jobName, String groupName);
 	boolean deleteJob(String jobName, String groupName);
+	boolean stopJob(String jobName, String groupName);
+	boolean pauseJob(String jobName, String groupName);
+	boolean resumeJob(String jobName, String groupName);
 }

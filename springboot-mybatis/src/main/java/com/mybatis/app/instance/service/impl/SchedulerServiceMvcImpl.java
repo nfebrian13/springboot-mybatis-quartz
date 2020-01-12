@@ -264,4 +264,64 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 			return false;
 		}
 	}
+
+	@Override
+	public boolean stopJob(String jobName, String groupName) {
+		System.out.println("JobServiceImpl.stopJob()");
+		try {
+			String jobKey = jobName;
+			String groupKey = groupName;
+
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+			JobKey jkey = new JobKey(jobKey, groupKey);
+
+			return scheduler.interrupt(jkey);
+
+		} catch (SchedulerException e) {
+			System.out.println("SchedulerException while stopping job. error message :" + e.getMessage());
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean pauseJob(String jobName, String groupName) {
+		System.out.println("Request received for pausing job.");
+
+		String jobKey = jobName;
+		String groupKey = groupName;
+		JobKey jkey = new JobKey(jobKey, groupKey);
+		System.out.println("Parameters received for pausing job : jobKey :" + jobKey + ", groupKey :" + groupKey);
+
+		try {
+			schedulerFactoryBean.getScheduler().pauseJob(jkey);
+			System.out.println("Job with jobKey :" + jobKey + " paused succesfully.");
+			return true;
+		} catch (SchedulerException e) {
+			System.out.println(
+					"SchedulerException while pausing job with key :" + jobName + " message :" + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean resumeJob(String jobName, String groupName) {
+		System.out.println("Request received for resuming job.");
+
+		String jobKey = jobName;
+		String groupKey = groupName;
+
+		JobKey jKey = new JobKey(jobKey, groupKey); 
+		System.out.println("Parameters received for resuming job : jobKey :"+jobKey);
+		try {
+			schedulerFactoryBean.getScheduler().resumeJob(jKey);
+			System.out.println("Job with jobKey :"+jobKey+ " resumed succesfully.");
+			return true;
+		} catch (SchedulerException e) {
+			System.out.println("SchedulerException while resuming job with key :"+jobKey+ " message :"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

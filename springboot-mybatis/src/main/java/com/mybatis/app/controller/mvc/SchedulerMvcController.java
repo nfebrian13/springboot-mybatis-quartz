@@ -94,7 +94,72 @@ public class SchedulerMvcController {
 				}
 			}
 		}
-		
+
+		return "redirect:/scheduler/job-list";
+	}
+
+	@RequestMapping(value = "/job-stop/{jobName}/{groupName}")
+	public String stopJob(Model model, @PathVariable("jobName") String jobName,
+			@PathVariable("groupName") String groupName) {
+
+		System.out.println("jobName " + jobName);
+		System.out.println("groupName " + groupName);
+
+		if (service.isJobWithNamePresent(jobName, groupName)) {
+			boolean isJobRunning = service.isJobRunning(jobName, groupName);
+
+			if (!isJobRunning) {
+				boolean status = service.stopJob(jobName, groupName);
+				if (status) {
+					return "redirect:/scheduler/job-list";
+				}
+			}
+		}
+
+		return "redirect:/scheduler/job-list";
+	}
+
+	@RequestMapping(value = "/job-pause/{jobName}/{groupName}")
+	public String pauseJob(Model model, @PathVariable("jobName") String jobName,
+			@PathVariable("groupName") String groupName) {
+
+		System.out.println("jobName " + jobName);
+		System.out.println("groupName " + groupName);
+
+		if (service.isJobWithNamePresent(jobName, groupName)) {
+			boolean isJobRunning = service.isJobRunning(jobName, groupName);
+
+			if (!isJobRunning) {
+				boolean status = service.pauseJob(jobName, groupName);
+				if (status) {
+					return "redirect:/scheduler/job-list";
+				}
+			}
+		}
+
+		return "redirect:/scheduler/job-list";
+	}
+
+	@RequestMapping(value = "/job-resume/{jobName}/{groupName}")
+	public String resumeJob(Model model, @PathVariable("jobName") String jobName,
+			@PathVariable("groupName") String groupName) {
+
+		System.out.println("jobName " + jobName);
+		System.out.println("groupName " + groupName);
+
+		if (service.isJobWithNamePresent(jobName, groupName)) {
+			String jobState = service.getJobState(jobName, groupName);
+
+			if (jobState.equals("PAUSED")) {
+				System.out.println("Job current state is PAUSED, Resuming job...");
+				boolean status = service.resumeJob(jobName, groupName);
+
+				if (status) {
+					return "redirect:/scheduler/job-list";
+				}
+			}
+		}
+
 		return "redirect:/scheduler/job-list";
 	}
 }
