@@ -25,6 +25,13 @@ public class SchedulerMvcController {
 		model.addAttribute("schedulerJob", schedulerJob);
 		return "scheduler/create_scheduler";
 	}
+	
+	@RequestMapping(value = "/job-create", method = RequestMethod.GET)
+	public String createJob(Model model) {
+		SchedulerJob schedulerJob = new SchedulerJob();
+		model.addAttribute("schedulerJob", schedulerJob);
+		return "scheduler/scheduler-create";
+	}
 
 	@RequestMapping(value = "/createprocess", method = RequestMethod.POST)
 	public String createProcess(@ModelAttribute SchedulerJob schedulerJob) {
@@ -46,7 +53,7 @@ public class SchedulerMvcController {
 		boolean createJob = service.createJob(obj);
 		System.out.println("createJob " + createJob);
 		
-		return "redirect:/scheduler/list";
+		return "redirect:/scheduler/job-list";
 	}
 
 	@RequestMapping(value = "/job-list", method = RequestMethod.GET)

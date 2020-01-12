@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-layout-decorate="~{fragments/layout}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Scheduler list Page</title>
+    <title>Create Scheduler</title>
 </head>
 
 <body>
@@ -9,7 +9,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Scheduler Page</h3>
+                <h3>Create Scheduler</h3>
             </div>
 
             <div class="title_right">
@@ -30,9 +30,8 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Scheduler list</h2>
+                        <h2>Create Scheduler</h2>
                         <ul class="nav navbar-right panel_toolbox">
-                        	<li><a data-th-href="@{/scheduler/job-create}"><span class="glyphicon glyphicon-plus"></span></a></li>
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -49,28 +48,42 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                       <table class="table table-striped">
-							<tr>
-								<th>Job Name</th>
-								<th>Group Name</th>
-								<th>Schedule Time</th>
-								<th>Last Fired Time</th>
-								<th>Next Fire Time</th>
-								<th>Job State</th>
-							    <th></th>
-							    <th></th>
-							</tr>
-							<tr th:each="job : ${listJobs}">
-								<td th:text="${job.jobName}"></td>
-								<td th:text="${job.groupName}"></td>
-								<td th:text="${job.scheduleTime}"></td>
-								<td th:text="${job.lastFiredTime}"></td>
-								<td th:text="${job.nextFireTime}"></td>
-								<td th:text="${job.jobState}"></td>
-								<td><button type="button" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-pencil"></span></button></td>
-								<td><button type="button" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-trash"></span></button></td>
-							</tr>
-						</table>
+                      <form action="#" th:action="@{/scheduler/createprocess}" th:object="${schedulerJob}" method="post">
+							<div class="form-group">
+								<label for="jobName">job Name</label> <input type="text"
+									th:field="*{jobName}" class="form-control" id="jobName" />
+							</div>
+				
+							<div class="form-group">
+								<label for="jobClass">job Class</label> <input type="text"
+									th:field="*{jobClass}" class="form-control" id="jobClass" />
+							</div>
+				
+							<div class="form-group">
+								<label for="groupName">Group Name</label> <input type="text"
+									th:field="*{groupName}" class="form-control" id="groupName" />
+							</div>
+				
+							<div class="form-group">
+								<label for="cronExpression">Cron Expression</label> <input
+									type="text" th:field="*{cronExpression}" class="form-control"
+									id="cronExpression" />
+							</div>
+				
+							<div class="form-group">
+								<label for="repeatTime">Repeat Time</label> <input type="text"
+									th:field="*{repeatTime}" class="form-control" id="repeatTime" />
+							</div>
+				
+							<div class="form-group">
+								<label for="CronJob">Is Cron Job</label> <input type="text"
+									th:field="*{CronJob}" class="form-control" id="CronJob" />
+							</div>
+				
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary btn-sm">submit</button>
+							</div>
+						</form>
                     </div>
                 </div>
             </div>
