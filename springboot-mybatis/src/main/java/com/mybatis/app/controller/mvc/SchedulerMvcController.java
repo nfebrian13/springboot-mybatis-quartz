@@ -162,4 +162,23 @@ public class SchedulerMvcController {
 
 		return "redirect:/scheduler/job-list";
 	}
+	
+	@RequestMapping(value = "/job-start/{jobName}/{groupName}")
+	public String startJob(Model model, @PathVariable("jobName") String jobName,
+			@PathVariable("groupName") String groupName) {
+
+		System.out.println("jobName " + jobName);
+		System.out.println("groupName " + groupName);
+
+		if (service.isJobWithNamePresent(jobName, groupName)) {
+			if(!service.isJobRunning(jobName, groupName)){
+				boolean status = service.startJobNow(jobName, groupName);
+				if (status) {
+					return "redirect:/scheduler/job-list";
+				}
+			}
+		}
+
+		return "redirect:/scheduler/job-list";
+	}
 }

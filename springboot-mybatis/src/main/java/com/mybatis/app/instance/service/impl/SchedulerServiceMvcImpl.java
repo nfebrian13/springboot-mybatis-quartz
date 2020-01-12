@@ -324,4 +324,24 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 			return false;
 		}
 	}
+	
+	@Override
+	public boolean startJobNow(String jobName, String groupName) {
+		System.out.println("Request received for starting job now.");
+
+		String jobKey = jobName;
+		String groupKey = groupName;
+
+		JobKey jKey = new JobKey(jobKey, groupKey); 
+		System.out.println("Parameters received for starting job now : jobKey :"+jobKey);
+		try {
+			schedulerFactoryBean.getScheduler().triggerJob(jKey);
+			System.out.println("Job with jobKey :"+jobKey+ " started now succesfully.");
+			return true;
+		} catch (SchedulerException e) {
+			System.out.println("SchedulerException while starting job now with key :"+jobKey+ " message :"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}		
+	}
 }

@@ -19,4 +19,5 @@ public interface SchedulerMvcService {
 	boolean stopJob(String jobName, String groupName);
 	boolean pauseJob(String jobName, String groupName);
 	boolean resumeJob(String jobName, String groupName);
+	boolean startJobNow(String jobName, String groupName);
 }
