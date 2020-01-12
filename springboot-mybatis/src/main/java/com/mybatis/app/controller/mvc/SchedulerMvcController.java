@@ -35,12 +35,6 @@ public class SchedulerMvcController {
 
 	@RequestMapping(value = "/createprocess", method = RequestMethod.POST)
 	public String createProcess(@ModelAttribute SchedulerJob schedulerJob) {
-		System.out.println(schedulerJob.getJobName());
-		System.out.println(schedulerJob.getJobClass());
-		System.out.println(schedulerJob.getGroupName());
-		System.out.println(schedulerJob.getCronExpression());
-		System.out.println(schedulerJob.getRepeatTime());
-		System.out.println(schedulerJob.isCronJob());
 		
 		SchedulerJob obj = new SchedulerJob();
 		obj.setJobName(schedulerJob.getJobName());
