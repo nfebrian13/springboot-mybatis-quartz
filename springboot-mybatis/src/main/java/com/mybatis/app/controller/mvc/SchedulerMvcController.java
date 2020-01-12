@@ -49,11 +49,11 @@ public class SchedulerMvcController {
 		return "redirect:/scheduler/list";
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String listJob(Model model) {
+	@RequestMapping(value = "/job-list", method = RequestMethod.GET)
+	public String JobList(Model model) {
 		List<SchedulerJob> listJob = service.schedulerJobMvcList();
 		model.addAttribute("listJobs", listJob);
-		return "scheduler/list_scheduler";
+		return "scheduler/scheduler-list";
 	}
 
 }
