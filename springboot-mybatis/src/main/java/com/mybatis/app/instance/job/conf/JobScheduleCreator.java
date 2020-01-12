@@ -8,6 +8,7 @@ import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
+import org.quartz.Trigger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
@@ -127,5 +128,24 @@ public class JobScheduleCreator {
 		factoryBean.setMisfireInstruction(misFireInstruction);
 		factoryBean.afterPropertiesSet();
 		return factoryBean.getObject();
+	}
+	
+	/**
+	 * Create a Single trigger.
+	 * 
+	 * @param triggerName Trigger name.
+	 * @param startTime Trigger start time.
+	 * @param misFireInstruction Misfire instruction (what to do in case of misfire happens).
+	 * 
+	 * @return Trigger
+	 */
+	public Trigger createSingleTrigger(String triggerName, Date startTime, int misFireInstruction){
+		SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+	    factoryBean.setName(triggerName);
+	    factoryBean.setStartTime(startTime);
+	    factoryBean.setMisfireInstruction(misFireInstruction);
+	    factoryBean.setRepeatCount(0);
+	    factoryBean.afterPropertiesSet();
+	    return factoryBean.getObject();
 	}
 }

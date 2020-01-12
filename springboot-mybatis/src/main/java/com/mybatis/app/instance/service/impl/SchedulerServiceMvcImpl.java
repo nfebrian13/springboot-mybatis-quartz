@@ -11,6 +11,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.TriggerKey;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,6 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 	public boolean createJob(SchedulerJob schedulerJob) {
 
 		try {
-
 			Trigger trigger;
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
@@ -67,13 +67,12 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 
 	@Override
 	public List<SchedulerJob> schedulerJobMvcList() {
-	
+
 		List<SchedulerJob> list = new ArrayList<>();
 
 		try {
-			
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
-
+			
 			for (String groupName : scheduler.getJobGroupNames()) {
 				for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
@@ -97,7 +96,7 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 					list.add(jobObj);
 				}
 			}
-			
+
 		} catch (SchedulerException e) {
 			System.out.println("SchedulerException while fetching all jobs. error message :" + e.getMessage());
 			e.printStackTrace();
@@ -110,7 +109,6 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 	public String getJobState(String jobName, String groupKey) {
 
 		try {
-			
 			JobKey jobKey = new JobKey(jobName, groupKey);
 
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -136,12 +134,78 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 					}
 				}
 			}
-			
+
 		} catch (SchedulerException e) {
 			System.out.println("SchedulerException while checking job with name and group exist:" + e.getMessage());
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
+	@Override
+	public boolean updateJob(SchedulerJob jobInfo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isJobWithNamePresent(String jobName, String groupKey) {
+		// TODO Auto-generated method stub
+		try {
+//			String groupKey = "SampleGroup";
+			JobKey jobKey = new JobKey(jobName, groupKey);
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+			if (scheduler.checkExists(jobKey)) {
+				return true;
+			}
+		} catch (SchedulerException e) {
+			System.out.println("SchedulerException while checking job with name and group exist:" + e.getMessage());
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean updateOneTimeJob(String jobName, Date date) {
+		// TODO Auto-generated method stub
+		System.out.println("Request received for updating one time job.");
+
+		String jobKey = jobName;
+
+		try {
+			Trigger newTrigger = scheduleCreator.createSingleTrigger(jobKey, date, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+			
+			Date dt = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
+			
+			return true;
+		} catch ( Exception e ) {
+			System.out.println("SchedulerException while updating one time job with key :"+jobKey + " message :"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updateCronJob(String jobName, Date date, String cronExpression) {
+		// TODO Auto-generated method stub
+		System.out.println("Request received for updating cron job.");
+
+		String jobKey = jobName;
+
+		System.out.println("Parameters received for updating cron job : jobKey :"+jobKey + ", date: "+date);
+		
+		try {
+			Trigger newTrigger = scheduleCreator.createCronTrigger(jobKey, date, cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+			
+			Date dt = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
+			
+			return true;
+		
+		} catch ( Exception e ) {
+			System.out.println("SchedulerException while updating cron job with key :"+jobKey + " message :"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }
