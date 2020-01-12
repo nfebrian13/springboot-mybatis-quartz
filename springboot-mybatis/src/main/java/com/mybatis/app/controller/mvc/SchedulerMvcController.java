@@ -76,4 +76,25 @@ public class SchedulerMvcController {
 		}
 		return "redirect:/scheduler/job-list";
 	}
+
+	@RequestMapping(value = "/job-delete/{jobName}/{groupName}")
+	public String deleteJob(Model model, @PathVariable("jobName") String jobName,
+			@PathVariable("groupName") String groupName) {
+
+		System.out.println("jobName " + jobName);
+		System.out.println("groupName " + groupName);
+
+		if (service.isJobWithNamePresent(jobName, groupName)) {
+			boolean isJobRunning = service.isJobRunning(jobName, groupName);
+
+			if (!isJobRunning) {
+				boolean status = service.deleteJob(jobName, groupName);
+				if (status) {
+					return "redirect:/scheduler/job-list";
+				}
+			}
+		}
+		
+		return "redirect:/scheduler/job-list";
+	}
 }

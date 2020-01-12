@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -72,7 +73,7 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 
 		try {
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
-			
+
 			for (String groupName : scheduler.getJobGroupNames()) {
 				for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
@@ -173,13 +174,15 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 		String jobKey = jobName;
 
 		try {
-			Trigger newTrigger = scheduleCreator.createSingleTrigger(jobKey, date, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
-			
+			Trigger newTrigger = scheduleCreator.createSingleTrigger(jobKey, date,
+					SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+
 			Date dt = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
-			
+
 			return true;
-		} catch ( Exception e ) {
-			System.out.println("SchedulerException while updating one time job with key :"+jobKey + " message :"+e.getMessage());
+		} catch (Exception e) {
+			System.out.println("SchedulerException while updating one time job with key :" + jobKey + " message :"
+					+ e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -192,20 +195,73 @@ public class SchedulerServiceMvcImpl implements SchedulerMvcService {
 
 		String jobKey = jobName;
 
-		System.out.println("Parameters received for updating cron job : jobKey :"+jobKey + ", date: "+date);
-		
+		System.out.println("Parameters received for updating cron job : jobKey :" + jobKey + ", date: " + date);
+
 		try {
-			Trigger newTrigger = scheduleCreator.createCronTrigger(jobKey, date, cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
-			
+			Trigger newTrigger = scheduleCreator.createCronTrigger(jobKey, date, cronExpression,
+					SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+
 			Date dt = schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobKey), newTrigger);
-			
+
 			return true;
-		
-		} catch ( Exception e ) {
-			System.out.println("SchedulerException while updating cron job with key :"+jobKey + " message :"+e.getMessage());
+
+		} catch (Exception e) {
+			System.out.println(
+					"SchedulerException while updating cron job with key :" + jobKey + " message :" + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
 	}
 
+	@Override
+	public boolean isJobRunning(String jobName, String groupName) {
+		System.out.println("Request received to check if job is running");
+
+		String jobKey = jobName;
+		String groupKey = groupName;
+
+		System.out.println("Parameters received for checking job is running now : jobKey :" + jobKey);
+
+		try {
+
+			List<JobExecutionContext> currentJobs = schedulerFactoryBean.getScheduler().getCurrentlyExecutingJobs();
+			if (currentJobs != null) {
+				for (JobExecutionContext jobCtx : currentJobs) {
+					String jobNameDB = jobCtx.getJobDetail().getKey().getName();
+					String groupNameDB = jobCtx.getJobDetail().getKey().getGroup();
+					if (jobKey.equalsIgnoreCase(jobNameDB) && groupKey.equalsIgnoreCase(groupNameDB)) {
+						return true;
+					}
+				}
+			}
+		} catch (SchedulerException e) {
+			System.out.println("SchedulerException while checking job with key :" + jobKey
+					+ " is running. error message :" + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean deleteJob(String jobName, String groupName) {
+		System.out.println("Request received for deleting job.");
+
+		String jobKey = jobName;
+		String groupKey = groupName;
+
+		JobKey jkey = new JobKey(jobKey, groupKey);
+		System.out.println("Parameters received for deleting job : jobKey :" + jobKey);
+
+		try {
+			boolean status = schedulerFactoryBean.getScheduler().deleteJob(jkey);
+			System.out.println("Job with jobKey :" + jobKey + " deleted with status :" + status);
+			return status;
+		} catch (SchedulerException e) {
+			System.out.println(
+					"SchedulerException while deleting job with key :" + jobKey + " message :" + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
