@@ -35,7 +35,6 @@ public class SchedulerMvcController {
 
 	@RequestMapping(value = "/createprocess", method = RequestMethod.POST)
 	public String createProcess(@ModelAttribute SchedulerJob schedulerJob) {
-		
 		SchedulerJob obj = new SchedulerJob();
 		obj.setJobName(schedulerJob.getJobName());
 		obj.setJobClass(schedulerJob.getJobClass());
